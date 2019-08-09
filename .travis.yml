@@ -12,6 +12,6 @@ git:
 
 script:
   - chmod -x template.sh
-  - sudo ./template.sh
-  - sudo ./template.sh --argument1
-  - sudo ./template.sh --args argument
+  - sudo bash template.sh
+  - sudo bash template.sh --argument1
+  - sudo bash template.sh --args argument
