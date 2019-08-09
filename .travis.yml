@@ -11,7 +11,6 @@ git:
   quiet: true
 
 script:
-  - chmod -x template.sh
   - sudo bash template.sh
   - sudo bash template.sh --argument1
   - sudo bash template.sh --args argument
