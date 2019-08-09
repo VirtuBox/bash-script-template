@@ -1,0 +1,17 @@
+sudo: required
+dist: xenial
+
+language: bash
+
+addons:
+  apt:
+    update: true
+
+git:
+  quiet: true
+
+script:
+  - chmod -x template.sh
+  - sudo ./template.sh
+  - sudo ./template.sh --argument1
+  - sudo ./template.sh --args argument

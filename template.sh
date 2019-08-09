@@ -7,7 +7,7 @@
 # Copyright (c) 2019 VirtuBox <contact@virtubox.net>
 # This script is licensed under M.I.T
 # -------------------------------------------------------------------------
-# Version 1.0.0 - 2019-05-01
+# Version 1.0.0 - 2019-08-09
 # -------------------------------------------------------------------------
 
 ##################################
@@ -47,12 +47,15 @@ _help() {
 # Arguments parsing
 ##################################
 
+# if there is no args, display help
 if [ "$#" -eq 0 ]; then
     _help
 
 else
+    # argument parsing
     while [ "$#" -gt 0 ]; do
         case "$1" in
+        # display help alternatives arguments
         -h | --help | help)
             _help
             exit 1
@@ -63,6 +66,7 @@ else
         --argument2)
             variable2="n"
             ;;
+        # with --args ok -> argument_args="ok"
         --args)
             argument_args="$2"
             shift
@@ -73,15 +77,19 @@ else
     done
 fi
 
+# set default variable if the variable is still empty
+if [ -z "$argument_args" ]; then
+    argument_args="nothing"
+fi
 ##################################
 # Check requirements
 ##################################
 
-# update apt-cache
+# update apt-cache quietly
 apt-get update -qq
 
-# checking if curl is installed
-[ -z "$(command -v curl)" ] && { apt-get -y install curl; } >> /dev/null 2>&1
+# checking if curl is installed and install it if needed non interactive way
+[ -z "$(command -v curl)" ] && { apt-get --assume-yes install curl; } >> /dev/null 2>&1
 
 ##################################
 # Variables
@@ -95,7 +103,7 @@ TIME_FORMAT='%d-%b-%Y-%H%M%S'
 TIME=$(date +"$TIME_FORMAT")
 FILE="$FILE_PATH/file.$TIME.gz"
 
-# Colors
+# Colors for output
 CSI='\033['
 CRED="${CSI}1;31m"
 CGREEN="${CSI}1;32m"
@@ -132,9 +140,14 @@ _do_something() {
     if
         {
             echo "hello"
+            echo "$OS_DISTRO_FULL"
+            echo "$DISTRO_ID"
+            echo "$FILE"
+            echo "$VARIABLE3"
             # do something here
 
-        } >> /var/log/bash-template.log 2>&1; then
+        } >> /var/log/bash-template.log 2>&1
+    then
         # if code returned is 0, tasks were successfull
         echo -ne "       Doing something              [${CGREEN}OK${CEND}]\\r"
         echo -ne '\n'
@@ -150,13 +163,14 @@ _do_something() {
 # Main
 ##################################
 
-
 # 1. install non interactive
 _install_non_interactive
 
 # 2. do something is variable1 = 1
 if [ "$variable1" = "1" ]; then
     _do_something
+elif [ "$variable2" = "n" ]; then
+    echo "do something else"
 else
-    echo "nothing to do "
+    echo "nothing to do but args are $argument_args"
 fi
